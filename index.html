@@ -203,21 +203,31 @@ input[type=range]{accent-color:var(--accent)}
     <div class="rounded-3xl p-8" style="background:var(--card);border:1px solid var(--line)">
       <div class="flex justify-between items-center mb-7">
         <div>
-          <div class="font-semibold text-xl tracking-tight">Design DNA</div>
-          <div class="text-sm mt-1" style="color:var(--fg-soft)">Two axes. Ten personalities. Same engineer underneath.</div>
+          <div class="font-semibold text-xl tracking-tight">The Console</div>
+          <div class="text-sm mt-1" style="color:var(--fg-soft)">X picks the world. Y decides how deep it talks. Two different jobs.</div>
         </div>
         <div id="manual-universe-name" class="text-xs tracking-[3px] font-mono opacity-70 text-right"></div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-9">
-        <div>
-          <div class="flex justify-between text-sm mb-2"><div style="color:var(--fg-soft)">X — STRUCTURE <span class="opacity-50">· how dense it gets</span></div><div id="manual-x-val" class="font-mono text-lg">35</div></div>
-          <input type="range" id="manual-x-slider" min="0" max="100" value="35" class="w-full">
-          <div class="flex justify-between text-[10px] mt-1.5" style="color:var(--fg-soft)"><div>Minimal</div><div>Maximal</div></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-9 md:items-center">
+        <!-- sliders -->
+        <div class="space-y-7">
+          <div>
+            <div class="flex justify-between text-sm mb-2"><div style="color:var(--fg-soft)">X — WORLD <span class="opacity-50">· 1 of 10 aesthetics</span></div><div id="manual-x-val" class="font-mono text-lg">01</div></div>
+            <input type="range" id="manual-x-slider" min="0" max="9" step="1" value="0" class="w-full">
+            <div class="flex justify-between text-[10px] mt-1.5" style="color:var(--fg-soft)"><div>Pure · quiet</div><div>Kinetic · loud</div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><div style="color:var(--fg-soft)">Y — DEPTH <span class="opacity-50">· 3 stops, snaps</span></div><div id="manual-y-val" class="font-mono text-lg">DEEP DIVE</div></div>
+            <input type="range" id="manual-y-slider" min="1" max="3" step="1" value="3" class="w-full">
+            <div class="flex justify-between text-[10px] mt-1.5" style="color:var(--fg-soft)"><div>Glance</div><div>Brief</div><div>Deep dive</div></div>
+          </div>
+          <div class="text-xs" style="color:var(--fg-soft)">Slide <strong style="color:var(--fg)">X</strong> to re-skin everything into another of the ten worlds. Slide <strong style="color:var(--fg)">Y</strong> to zoom the work in or out — from a bare list of names to the full write-up. Same projects, your level of detail.</div>
         </div>
+        <!-- the map: X = world (dots on the line), Y = depth (vertical bands) -->
         <div>
-          <div class="flex justify-between text-sm mb-2"><div style="color:var(--fg-soft)">Y — ENERGY <span class="opacity-50">· emotional volume</span></div><div id="manual-y-val" class="font-mono text-lg">25</div></div>
-          <input type="range" id="manual-y-slider" min="0" max="100" value="25" class="w-full">
-          <div class="flex justify-between text-[10px] mt-1.5" style="color:var(--fg-soft)"><div>Calm</div><div>Loud</div></div>
+          <div class="text-[11px] tracking-[2px] uppercase mb-3" style="color:var(--fg-soft)">The map · X = world · Y = depth</div>
+          <div id="dna-map" class="relative w-full select-none blueprint" style="aspect-ratio:1/1;max-width:340px;margin-inline:auto;border:1px solid var(--line);border-radius:1rem;overflow:hidden"></div>
+          <div class="flex justify-between text-[10px] mt-2" style="color:var(--fg-soft)"><span>← first world</span><span>last world →</span></div>
         </div>
       </div>
     </div>
@@ -233,28 +243,121 @@ input[type=range]{accent-color:var(--accent)}
 <script>
 /* ============================ DATA ============================ */
 const projects = [
-  { id:1, title:"Read to Think", tech:"Next.js · Streaming LLM · BYO-Key", short:"AI reading companion with Zettelkasten & spaced repetition.", long:"All notes and reading data stay in IndexedDB. You bring your own API key — nothing routes through me.", why:"Reading should compound, not evaporate the moment you close the tab.", metric:"100% local notes", year:"2025", status:"Live", local:85, privacy:92, github:"https://github.com/RLalithSeeker" },
-  { id:2, title:"Sentinel Control Plane", tech:"Go · Prisma · SQLite · Next.js 14", short:"3-component AI governance suite that scans for PII.", long:"Raw code and prompts never leave the machine. Only numeric metadata is ever shared upstream.", why:"AI governance shouldn't mean shipping your source code to a vendor.", metric:"Only metadata leaves", year:"2025", status:"Prototype", local:78, privacy:95, github:"https://github.com/RLalithSeeker" },
-  { id:3, title:"GrandShield DNS Firewall", tech:"Go 1.22 · LightGBM · Bloom Filter", short:"ML-powered DNS firewall filtering 5M+ domains.", long:"Entirely router-level. No cloud calls. Your browsing patterns never leave the network.", why:"A home shouldn't have to trust the cloud just to stay safe.", metric:"5M+ domains filtered", year:"2025", status:"Live", local:92, privacy:98, github:"https://github.com/RLalithSeeker" },
-  { id:4, title:"Context MCP Server", tech:"TypeScript · Model Context Protocol", short:"15-tool MCP server for structured web scraping.", long:"Pure client-side. You control every single piece of context that gets sent to a model.", why:"You should own every token of context a model ever sees.", metric:"15 tools", year:"2025", status:"Live", local:65, privacy:70, github:"https://github.com/RLalithSeeker" },
-  { id:5, title:"CamBrain Vision System", tech:"YOLO11 · MediaPipe · Groq VLM", short:"Real-time multi-camera vision on consumer GPU.", long:"54ms on an RTX 4050. All inference local. Built for the real hardware clinics already own.", why:"Clinics deserve vision AI on the hardware they already paid for.", metric:"54ms · RTX 4050", year:"2025", status:"4 sprints", local:88, privacy:82, github:"https://github.com/RLalithSeeker" },
-  { id:6, title:"ExamGuard", tech:"Go · DNS · Router-level", short:"Exam-integrity firewall that locks a network to test-only domains.", long:"Runs at the router — no agent on the student's machine, nothing logged to a server.", why:"Integrity without putting spyware on a student's own laptop.", metric:"0 client agents", year:"2025", status:"In test", local:90, privacy:88, github:"https://github.com/RLalithSeeker" },
-  { id:7, title:"ScreenFence", tech:"Pi Zero 2W · DNS · USB Dongle", short:"Plug-in parental-controls dongle for any household network.", long:"A USB dongle that filters a whole home at the DNS layer. Config stays local; data never phones home.", why:"Parental controls a parent can literally just plug in.", metric:"Whole-home DNS", year:"2025", status:"Dongle WIP", local:90, privacy:85, github:"https://github.com/RLalithSeeker" },
-  { id:8, title:"WhisperWriter", tech:"faster-whisper · CTranslate2 · Python", short:"Offline push-to-talk dictation anywhere in the OS.", long:"Speech-to-text that runs fully on-device with faster-whisper. Your voice never touches a cloud API.", why:"Your voice is yours. It should never hit someone else's server.", metric:"100% offline", year:"2026", status:"Daily-driver", local:95, privacy:96, github:"https://github.com/RLalithSeeker" },
-  { id:9, title:"Jarvis Bridge", tech:"ESP32 · WebSocket · Groq · Local Voice", short:"Near/far voice + hardware bridge to my whole machine.", long:"A voice assistant wired to my OS over WebSocket. A rule router answers locally first.", why:"Answer locally first; escalate to a model only when you truly must.", metric:"Rule→Groq→Claude", year:"2026", status:"Live", local:80, privacy:78, github:"https://github.com/RLalithSeeker" },
-  { id:10, title:"Vaidya-RAD", tech:"PyTorch · CNN · DICOM", short:"Radiology triage AI for Indian hospitals (Triomav).", long:"Chest-scan triage trained for real Indian hospital workflows. Runs on hardware clinics own.", why:"Triage built for how Indian hospitals actually run, not a foreign demo.", metric:"On-prem scans", year:"2026", status:"Stage 2", local:70, privacy:86, github:"https://github.com/RLalithSeeker" }
+  { id:1, title:"Read to Think", tech:"Next.js · Streaming LLM · BYO-Key", short:"AI reading companion with Zettelkasten & spaced repetition.", desc:"A reading companion that turns articles and books into durable knowledge — three modes (Deep Read, Chat, and a personal book library), recall-gated quizzes, and a Zettelkasten with spaced repetition.", long:"All notes and reading data stay in IndexedDB. You bring your own API key — nothing routes through me.", why:"Reading should compound, not evaporate the moment you close the tab.", metric:"100% local notes", year:"2025", status:"Live", local:85, privacy:92, github:"https://github.com/RLalithSeeker/read-to-think" },
+  { id:2, title:"Sentinel AI Guard", tech:"Go · VS Code Ext · Next.js", short:"AI governance suite that scans for PII before it reaches a model.", desc:"An AI governance suite — a VS Code extension and Go proxy that scan code and prompts for PII and secrets locally, plus a metadata-only dashboard — so nothing sensitive ever reaches an AI tool.", long:"Raw code and prompts never leave the machine. Only numeric metadata is ever shared upstream.", why:"AI governance shouldn't mean shipping your source code to a vendor.", metric:"Only metadata leaves", year:"2026", status:"Live · MIT", local:78, privacy:95, github:"https://github.com/RLalithSeeker/sentinel-ai-guard" },
+  { id:3, title:"GrandShield DNS Firewall", tech:"Go 1.22 · LightGBM · Bloom Filter", short:"ML-powered DNS firewall filtering 5M+ domains.", desc:"A self-hosted DNS firewall and Pi-hole alternative. A LightGBM model plus a Bloom filter classify and block malicious or unwanted domains across 5M+ entries — all at the router, set up once.", long:"Entirely router-level. No cloud calls. Your browsing patterns never leave the network.", why:"A home shouldn't have to trust the cloud just to stay safe.", metric:"5M+ domains filtered", year:"2026", status:"Live", local:92, privacy:98, github:"https://github.com/RLalithSeeker" },
+  { id:4, title:"Pinterest Design Vault", tech:"Python · Groq Vision · Local Vault", short:"Syncs Pinterest boards into a local design-taste vault.", desc:"A tool that syncs Pinterest boards into a local design-taste vault — pulling colour palettes from stills and running Groq-vision motion analysis on video pins, without ever storing the video itself.", long:"Builds a personal, queryable design library on disk. Palettes and motion notes are extracted locally; no media is kept.", why:"Good taste should be a library you own, not a feed you rent.", metric:"No media stored", year:"2026", status:"Live", local:85, privacy:88, github:"https://github.com/RLalithSeeker/pinterest-design-vault" },
+  { id:5, title:"CamBrain Vision System", tech:"YOLO11 · MediaPipe · Groq VLM", short:"Real-time multi-camera vision on consumer GPU.", desc:"A multi-mode AI surveillance system pairing YOLO11 and MediaPipe with a Groq VLM — behavioural IQ, Exam/ElderCare/Safety modes, cross-camera Re-ID and a conversational dashboard — at 54ms on a consumer RTX 4050.", long:"54ms on an RTX 4050. All inference local. Built for the real hardware clinics already own.", why:"Clinics deserve vision AI on the hardware they already paid for.", metric:"54ms · RTX 4050", year:"2026", status:"4 sprints", local:88, privacy:82, github:"https://github.com/RLalithSeeker" },
+  { id:6, title:"ExamGuard", tech:"Go · DNS · Router-level", short:"Exam-integrity firewall that locks a network to test-only domains.", desc:"A network-level exam-integrity firewall for Indian classrooms. It blocks AI and cheating sites at the DNS layer straight from the router — no agent installed on any student's machine, nothing logged to a server.", long:"Runs at the router — no agent on the student's machine, nothing logged to a server.", why:"Integrity without putting spyware on a student's own laptop.", metric:"0 client agents", year:"2026", status:"In test", local:90, privacy:88, github:"https://github.com/RLalithSeeker" },
+  { id:7, title:"ScreenFence", tech:"Router-level · DNS · Pi Zero 2W", short:"Router-level parental controls for any household network.", desc:"Router-level parental controls built for Indian homes — filter a whole household at the DNS layer, with a USB-dongle (Pi Zero 2W) form factor in progress. Config stays on the device; nothing phones home.", long:"Filters a whole home at the DNS layer. Config stays local; data never phones home.", why:"Parental controls a parent can actually set up themselves.", metric:"Whole-home DNS", year:"2026", status:"Live · dongle WIP", local:90, privacy:85, github:"https://github.com/RLalithSeeker" },
+  { id:8, title:"News Brain", tech:"Python · PWA · LAN QR Sync", short:"Offline newsletter-capture vault with phone sync.", desc:"A local-only tool that captures tools and ideas from newsletters into a personal vault, with an offline phone PWA and LAN QR-code sync — so your reading queue lives on your own devices, not a cloud account.", long:"Captures into a local vault and syncs to a phone over the LAN by QR — nothing leaves your network.", why:"Your reading queue shouldn't be someone else's growth metric.", metric:"Local-only · LAN sync", year:"2026", status:"Live", local:92, privacy:90, github:"https://github.com/RLalithSeeker" },
+  { id:9, title:"Jarvis Bridge", tech:"ESP32 · WebSocket · Groq · Local Voice", short:"Near/far voice + hardware bridge to my whole machine.", desc:"A voice-and-hardware assistant wired to my machine over WebSocket, with an ESP32 for far-field input. A rule router answers locally first and only escalates to Groq or Claude when it has to.", long:"A voice assistant wired to my OS over WebSocket. A rule router answers locally first.", why:"Answer locally first; escalate to a model only when you truly must.", metric:"Rule→Groq→Claude", year:"2026", status:"Live", local:80, privacy:78, github:"https://github.com/RLalithSeeker" },
+  { id:10, title:"Vaidya-RAD", tech:"PyTorch · CNN · DICOM", short:"Radiology triage AI for Indian hospitals (Triomav).", desc:"A radiology-triage CNN for Indian hospitals (Triomav) that reads chest scans from DICOM and prioritises urgent cases — trained for real local workflows and on-premise hardware.", long:"Chest-scan triage trained for real Indian hospital workflows. Runs on hardware clinics own.", why:"Triage built for how Indian hospitals actually run, not a foreign demo.", metric:"On-prem scans", year:"2026", status:"Stage 2", local:70, privacy:86, github:"https://github.com/RLalithSeeker" }
 ];
 
-const PRINCIPLES = [
-  { k:"Intent over code", d:"I don't write code line by line. I write a complete PRD — goals, constraints, user mental models, non-negotiables — and let the AI connect the dots while I guard taste and architecture." },
-  { k:"Local-first by default", d:"Privacy isn't a feature you bolt on at the end. When something matters, the user's data never leaves their device. No silent cloud calls, no telemetry." },
-  { k:"Free tools first", d:"I plan with free tools and lean models before spending a cent — arenas for thinking, fast small models for the light work. Cost discipline from line one." },
-  { k:"Demo before build", d:"Nothing gets built blind. A demo earns approval first, then I build the full thing. No weeks lost to a wrong assumption." },
-  { k:"Research, then design", d:"Before a single pixel I study the best — award galleries, real animation work, reference sites. Taste is gathered, not guessed." },
-  { k:"Never guess a bug", d:"I debug from the real world — find who already hit the same wall — instead of burning hours guessing in the dark." },
-  { k:"Log everything", d:"Every project keeps a memory. A mistake gets written down exactly once, so it's never repeated twice." },
-  { k:"Ship complete", d:"Not prototypes. Production products — auth, payments, polish, the boring 20% — that real people actually use." }
-];
+/* per-universe PRINCIPLES — same eight rules, told in each universe's voice */
+const PRIN = {
+1:[
+  {k:"Intent over code",d:"I write a complete brief — goals, constraints, the user's mental model — and let the model fill in the lines."},
+  {k:"Local-first",d:"When data matters, it stays on the device. No silent calls, no telemetry."},
+  {k:"Free tools first",d:"I plan with free tools and small models before spending a cent."},
+  {k:"Demo, then build",d:"A demo earns approval before the full build begins."},
+  {k:"Research, then design",d:"I study the best work first. Taste is gathered, not guessed."},
+  {k:"Never guess a bug",d:"I find who already hit the same wall instead of guessing in the dark."},
+  {k:"Log everything",d:"Every project keeps a memory, so a mistake is made only once."},
+  {k:"Ship complete",d:"Production, not prototypes — the boring last 20% included."}
+],
+2:[
+  {k:"Intent, not syntax",d:"The work begins as a brief, not a file — goals and constraints set down before a line is written."},
+  {k:"A local-first ethic",d:"Where it counts, nothing leaves the reader's machine; privacy is the house style."},
+  {k:"Frugal by habit",d:"Free tools and lean models do the early thinking, long before any budget is spent."},
+  {k:"The demo as draft",d:"Every build opens with a proof — approved, then written in full."},
+  {k:"Study before the page",d:"Reference is read closely first; taste is collected, never improvised."},
+  {k:"No blind debugging",d:"The fix is researched in the field, not invented at the desk."},
+  {k:"A kept record",d:"Each project holds its own notes, so an error is printed once and never reprinted."},
+  {k:"Finished, not sketched",d:"The piece ships complete — the unglamorous final fifth and all."}
+],
+3:[
+  {k:"INTENT FIRST",d:"WRITE THE BRIEF. THE MODEL WRITES THE CODE. I HOLD THE LINE."},
+  {k:"LOCAL OR NOTHING",d:"DATA STAYS ON DEVICE. NO CLOUD. NO TELEMETRY."},
+  {k:"FREE TOOLS FIRST",d:"PLAN CHEAP. SMALL MODELS. ZERO SPEND UNTIL IT EARNS IT."},
+  {k:"DEMO THEN BUILD",d:"PROVE IT. GET APPROVAL. THEN BUILD THE WHOLE THING."},
+  {k:"RESEARCH FIRST",d:"STUDY THE BEST. NO GUESSED TASTE."},
+  {k:"NEVER GUESS BUGS",d:"FIND WHO HIT THE WALL. DON'T BURN HOURS GUESSING."},
+  {k:"LOG EVERYTHING",d:"WRITE THE MISTAKE DOWN ONCE. NEVER REPEAT IT."},
+  {k:"SHIP COMPLETE",d:"NOT PROTOTYPES. PRODUCTS. THE BORING 20% TOO."}
+],
+4:[
+  {k:"Intent in motion",d:"Hand off a full brief and let the build run — I steer taste and architecture at speed."},
+  {k:"Local, always moving",d:"Data stays put while everything else moves; no cloud tagging along."},
+  {k:"Cheap and quick",d:"Free tools and fast small models keep the early momentum free."},
+  {k:"Demo, then go",d:"Prove it in a beat, get the nod, then sprint the full build."},
+  {k:"Look before you leap",d:"Study the best work first so the motion lands right."},
+  {k:"Skip the guessing",d:"Chase the real-world fix instead of spinning in the dark."},
+  {k:"Memory on the move",d:"Every project logs as it goes — mistakes don't get a rerun."},
+  {k:"Ship, don't stall",d:"Production-complete or it doesn't leave the gate."}
+],
+5:[
+  {k:"Plant the intent",d:"I set down a full brief like a seed, then let the model grow it while I tend the shape."},
+  {k:"Keep it close to home",d:"What's tender stays on the device — nothing leaks out to the cloud."},
+  {k:"Grow within means",d:"Free tools and small models do the early growing, before any spend."},
+  {k:"A demo to root",d:"Each idea roots as a demo first, earns trust, then grows in full."},
+  {k:"Tend by example",d:"I study fine work first; taste is cultivated, not guessed."},
+  {k:"Don't poke in the dark",d:"I find who already weathered the same blight rather than guess."},
+  {k:"Keep a journal",d:"Every project remembers, so a wilt happens once and not twice."},
+  {k:"Let it ripen fully",d:"Nothing ships half-grown — the quiet final care is part of it."}
+],
+6:[
+  {k:"// intent > code",d:"feed the model a full spec; it connects the dots, i guard taste + architecture."},
+  {k:"// local_first=true",d:"sensitive data never leaves the device. uplink: 0 kb/s."},
+  {k:"// budget=0 first",d:"plan on free tools + lean models before any spend."},
+  {k:"// demo before deploy",d:"prototype earns approval, then the full build executes."},
+  {k:"// research.then(design)",d:"study reference work first — taste is loaded, not guessed."},
+  {k:"// no blind patch",d:"query the real world for the fix; never guess in the dark."},
+  {k:"// log.append(error)",d:"each project persists memory — a bug is written once."},
+  {k:"// ship --complete",d:"production builds only; the boring 20% is in scope."}
+],
+7:[
+  {k:"Spec over code",d:"Requirements are written as a full brief; implementation is delegated, taste is retained."},
+  {k:"Local-first boundary",d:"Data flow is specified to stay on device; nothing crosses without intent."},
+  {k:"Cost tolerance: zero",d:"Free tools and lean models carry the design phase before any spend."},
+  {k:"Prototype gate",d:"A demo must pass approval before full construction proceeds."},
+  {k:"Reference before draft",d:"Prior art is studied first; taste is sourced, not assumed."},
+  {k:"No assumed faults",d:"Defects are researched against known cases, never guessed."},
+  {k:"Revision log",d:"Each project records its history; a fault is documented once."},
+  {k:"Build to finish",d:"Delivered to production spec — the final fifth included."}
+],
+8:[
+  {k:"i write intent, not code",d:"i hand the ai a full brief and let it run, while i keep the taste in check."},
+  {k:"local-first, always",d:"your stuff stays on your machine. no sneaky cloud calls. promise."},
+  {k:"free tools first!",d:"plan with free stuff and tiny models before spending a single rupee."},
+  {k:"demo before building",d:"show a quick demo, get a yes, then build the whole thing."},
+  {k:"research, then design",d:"i go look at the best work first — taste is gathered, not guessed."},
+  {k:"never guess a bug",d:"i find someone who already hit it instead of guessing for hours."},
+  {k:"log everything",d:"every project keeps notes so i mess up once, not twice."},
+  {k:"ship the whole thing",d:"real products, not prototypes — even the boring 20%."}
+],
+9:[
+  {k:"Intent, finely set",d:"A complete brief is composed; the model executes while I keep taste and architecture."},
+  {k:"Discreetly local",d:"When it matters, nothing leaves the device — quiet by design."},
+  {k:"Restraint in spend",d:"Free tools and lean models carry the thinking before a single cost."},
+  {k:"The demo, first",d:"A proof earns its approval before the full work is undertaken."},
+  {k:"Study, then form",d:"The finest work is studied first; taste is gathered with care."},
+  {k:"Never guess",d:"A fault is traced through what others have found, not improvised."},
+  {k:"A kept memory",d:"Every project remembers, so a misstep is taken only once."},
+  {k:"Delivered whole",d:"Complete, considered, finished — the unseen final fifth as well."}
+],
+10:[
+  {k:"intent_over_code",d:"input: full PRD → model connects dots → i hold taste + architecture."},
+  {k:"local_first=default",d:"sensitive data stays on-device. cloud_calls=0."},
+  {k:"free_tools_first",d:"plan w/ free tools + lean models; spend=0 until justified."},
+  {k:"demo→approve→build",d:"prototype gates the full build. no blind builds."},
+  {k:"research→design",d:"study reference work first. taste=gathered, not guessed."},
+  {k:"no_blind_debug",d:"search prior cases for the fix. guess=last resort."},
+  {k:"log_everything",d:"per-project memory. error logged once, never repeated."},
+  {k:"ship_complete",d:"prod-grade only. includes the boring 20%."}
+]
+};
 
 const F = {
   inter:"'Inter',system-ui,sans-serif", grotesk:"'Space Grotesk',sans-serif",
@@ -297,20 +400,30 @@ const VOCAB = {
 /* ============================ HERO ============================ */
 const HERO = {
 1:()=>`
-  <section class="px-8 max-w-4xl mx-auto pt-12 pb-20">
-    <div class="kicker" style="color:var(--accent)" data-reveal>Local-first · Hyderabad, India</div>
-    <h1 class="mt-10 font-light leading-[.92]" style="font-size:clamp(42px,9vw,108px);letter-spacing:-4px" data-reveal>systems that<br>respect your<br><span style="color:var(--accent)">device.</span></h1>
-    <div class="mt-14 h-px w-full" style="background:var(--line)" data-reveal></div>
-    <p class="mt-6 max-w-md text-lg" style="color:var(--fg-soft)" data-reveal>I build complete, production AI products that run quietly on your own machine. No cloud you didn't ask for. No data you didn't agree to send.</p>
+  <section class="px-8 max-w-5xl mx-auto pt-10 pb-10">
+    <div class="flex items-center gap-3 kicker" style="color:var(--accent)" data-reveal><span class="font-mono">01</span><span class="h-px w-8" style="background:var(--accent)"></span><span>Local-first · Hyderabad, India</span></div>
+    <h1 class="mt-7 font-light leading-[.9]" style="font-size:clamp(46px,10vw,124px);letter-spacing:-3px" data-reveal>systems that<br>respect your<br><span style="color:var(--accent);font-style:italic;font-family:var(--font-display);font-weight:500">device.</span></h1>
+    <div class="mt-9 grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-6 items-start" data-reveal>
+      <p class="md:col-span-2 max-w-lg text-lg leading-relaxed" style="color:var(--fg-soft)">I build complete, production AI products that run quietly on your own machine. No cloud you didn't ask for, no data you didn't agree to send.</p>
+      <div class="flex md:justify-end gap-9 text-sm" style="color:var(--fg-soft)">
+        <div><div class="text-3xl font-semibold" style="color:var(--fg)">10+</div><div class="mt-1">shipped</div></div>
+        <div><div class="text-3xl font-semibold" style="color:var(--fg)">0</div><div class="mt-1">cloud calls</div></div>
+      </div>
+    </div>
   </section>`,
 2:()=>`
-  <section class="px-8 max-w-5xl mx-auto pt-8 pb-14">
-    <div class="flex items-center justify-between text-[11px] tracking-[3px] uppercase pb-3" style="border-bottom:3px double var(--line)" data-reveal>
+  <section class="px-8 max-w-5xl mx-auto pt-8 pb-8">
+    <div class="flex items-center justify-between text-[11px] tracking-[3px] uppercase pb-2" style="border-bottom:3px double var(--line)" data-reveal>
       <span>Vol. XII · No. 6</span><span style="font-family:var(--font-display)" class="text-base">THE INTENT REVIEW</span><span>Hyderabad · 2026</span>
     </div>
-    <h1 class="mt-12" style="font-family:var(--font-display);font-weight:700;font-size:clamp(46px,10vw,132px);line-height:.9;letter-spacing:-2px" data-reveal>I don't write<br>code. I write<br><em style="color:var(--accent)">intent.</em></h1>
-    <div class="mt-12 md:columns-3 gap-10 text-[15px] leading-relaxed" style="color:var(--fg-soft)" data-reveal>
-      <p style="margin:0"><span style="float:left;font-family:var(--font-display);font-size:62px;line-height:46px;padding:6px 10px 0 0;color:var(--accent)">F</span>ull-stack engineer who ships complete, production AI products. I hand a model a full PRD — goals, constraints, mental models, non-negotiables — then let it connect the dots while I hold the line on taste and architecture.</p>
+    <h1 class="mt-6" style="font-family:var(--font-display);font-weight:700;font-size:clamp(56px,12vw,168px);line-height:.84;letter-spacing:-3px" data-reveal>I don't write<br>code. I write<br><em style="color:var(--accent)">intent.</em></h1>
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pt-3 text-[11px] tracking-[2px] uppercase" style="border-top:1px solid var(--line)" data-reveal>
+      <span style="color:var(--fg-soft)">By Lalith R. — field notes on a local-first practice</span>
+      <span style="color:var(--accent)">Full-stack · AI Product Engineering</span>
+    </div>
+    <p class="mt-7 text-2xl sm:text-3xl leading-snug max-w-3xl" style="font-family:var(--font-display);color:var(--fg)" data-reveal>Ten finished products — each one built to run on the machine sitting right in front of you.</p>
+    <div class="mt-7 md:columns-3 gap-10 text-[15px] leading-relaxed" style="color:var(--fg-soft)" data-reveal>
+      <p style="margin:0"><span style="float:left;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;line-height:.82;padding:9px 12px 0 0;color:var(--accent)">F</span>ull-stack engineer who ships complete, production AI products. I hand a model a full PRD — goals, constraints, mental models, non-negotiables — then let it connect the dots while I hold the line on taste and architecture.</p>
     </div>
   </section>`,
 3:()=>`
@@ -398,84 +511,90 @@ const HERO = {
 };
 
 /* ============================ HOW I WORK (ideology) ============================ */
-function renderWork(n){
-  const P=PRINCIPLES;
+function renderWork(n,D=3){
+  const P=PRIN[n]||PRIN[1];
+  const dd=D>=3; /* descriptions only appear at DEEP; BRIEF shows the rule titles alone */
   const fam={1:'list',9:'list',2:'mag',3:'box',7:'box',5:'soft',8:'soft',6:'mono',10:'mono',4:'kin'}[n];
-  if(fam==='list') return `<div class="max-w-3xl">${P.map((p,i)=>`<div class="flex gap-6 py-6" style="border-bottom:1px solid var(--line)" data-reveal><div class="font-mono text-sm pt-1" style="color:var(--accent)">${String(i+1).padStart(2,'0')}</div><div><div class="text-xl font-medium">${p.k}</div><div class="mt-2 text-base leading-relaxed" style="color:var(--fg-soft)">${p.d}</div></div></div>`).join('')}</div>`;
-  if(fam==='mag') return `<div class="md:columns-2 gap-12" style="column-gap:3rem">${P.map((p,i)=>`<div class="mb-9 break-inside-avoid" data-reveal><div class="text-[11px] tracking-[2px] uppercase mb-1" style="color:var(--accent)">No. ${String(i+1).padStart(2,'0')}</div><div style="font-family:var(--font-display);font-size:26px;line-height:1.05">${p.k}</div><div class="mt-2 text-[15px] leading-relaxed" style="color:var(--fg-soft)">${p.d}</div></div>`).join('')}</div>`;
-  if(fam==='box') return `<div class="grid grid-cols-1 md:grid-cols-2 gap-px" style="background:var(--line)">${P.map((p,i)=>`<div class="p-7" style="background:var(--bg)" data-reveal><div class="flex justify-between items-baseline"><div class="uppercase font-bold" style="font-family:var(--font-display);font-size:clamp(18px,2.4vw,26px)">${p.k}</div><span class="font-mono text-xs" style="color:var(--accent)">${String(i+1).padStart(2,'0')}</span></div><div class="mt-5 text-sm leading-relaxed" style="color:var(--fg-soft)">${p.d}</div></div>`).join('')}</div>`;
-  if(fam==='soft') return `<div class="grid grid-cols-1 md:grid-cols-2 gap-5">${P.map((p,i)=>`<div class="p-7" style="background:var(--card);border:1px solid var(--line);border-radius:1.6rem ${i%2?'1.6rem .5rem 1.6rem':'.5rem 1.6rem 1.6rem'}" data-reveal><div class="flex items-center gap-3"><div class="w-2.5 h-2.5 rounded-full" style="background:var(--accent)"></div><div class="text-lg font-semibold">${p.k}</div></div><div class="mt-3 text-[15px] leading-relaxed" style="color:var(--fg-soft)">${p.d}</div></div>`).join('')}</div>`;
-  if(fam==='mono') return `<div style="border:1px solid var(--line)">${P.map((p,i)=>`<div class="flex flex-col md:flex-row gap-2 md:gap-6 px-5 py-4 text-sm" style="${i<P.length-1?'border-bottom:1px solid var(--line)':''}" data-reveal><div class="font-mono whitespace-nowrap" style="color:var(--accent)">[${String(i+1).padStart(2,'0')}]</div><div class="font-semibold whitespace-nowrap md:w-56" style="color:var(--accent2)">${p.k}</div><div style="color:var(--fg-soft)">${p.d}</div></div>`).join('')}</div>`;
-  /* kin */ return `<div class="space-y-1">${P.map((p,i)=>`<div class="overflow-hidden whitespace-nowrap py-1" data-reveal><span class="an-marqf" style="font-family:var(--font-display);font-size:clamp(22px,4.5vw,44px);color:${i%2?'var(--accent)':'var(--fg)'}">${(p.k+'&nbsp;&nbsp;—&nbsp;&nbsp;'+p.d+'&nbsp;&nbsp;✺&nbsp;&nbsp;').repeat(2)}</span></div>`).join('')}</div>`;
+  if(fam==='list') return `<div class="max-w-3xl">${P.map((p,i)=>`<div class="flex gap-6 ${dd?'py-6':'py-4'}" style="border-bottom:1px solid var(--line)" data-reveal><div class="font-mono text-sm pt-1" style="color:var(--accent)">${String(i+1).padStart(2,'0')}</div><div><div class="text-xl font-medium">${p.k}</div>${dd?`<div class="mt-2 text-base leading-relaxed" style="color:var(--fg-soft)">${p.d}</div>`:''}</div></div>`).join('')}</div>`;
+  if(fam==='mag') return `<div class="md:columns-2 gap-12" style="column-gap:3rem">${P.map((p,i)=>`<div class="${dd?'mb-9':'mb-5'} break-inside-avoid" data-reveal><div class="text-[11px] tracking-[2px] uppercase mb-1" style="color:var(--accent)">No. ${String(i+1).padStart(2,'0')}</div><div style="font-family:var(--font-display);font-size:26px;line-height:1.05">${p.k}</div>${dd?`<div class="mt-2 text-[15px] leading-relaxed" style="color:var(--fg-soft)">${p.d}</div>`:''}</div>`).join('')}</div>`;
+  if(fam==='box') return `<div class="grid grid-cols-1 md:grid-cols-2 gap-px" style="background:var(--line)">${P.map((p,i)=>`<div class="p-7" style="background:var(--bg)" data-reveal><div class="flex justify-between items-baseline"><div class="uppercase font-bold" style="font-family:var(--font-display);font-size:clamp(18px,2.4vw,26px)">${p.k}</div><span class="font-mono text-xs" style="color:var(--accent)">${String(i+1).padStart(2,'0')}</span></div>${dd?`<div class="mt-5 text-sm leading-relaxed" style="color:var(--fg-soft)">${p.d}</div>`:''}</div>`).join('')}</div>`;
+  if(fam==='soft') return `<div class="grid grid-cols-1 md:grid-cols-2 gap-5">${P.map((p,i)=>`<div class="p-7" style="background:var(--card);border:1px solid var(--line);border-radius:1.6rem ${i%2?'1.6rem .5rem 1.6rem':'.5rem 1.6rem 1.6rem'}" data-reveal><div class="flex items-center gap-3"><div class="w-2.5 h-2.5 rounded-full" style="background:var(--accent)"></div><div class="text-lg font-semibold">${p.k}</div></div>${dd?`<div class="mt-3 text-[15px] leading-relaxed" style="color:var(--fg-soft)">${p.d}</div>`:''}</div>`).join('')}</div>`;
+  if(fam==='mono') return `<div style="border:1px solid var(--line)">${P.map((p,i)=>`<div class="flex flex-col md:flex-row gap-2 md:gap-6 px-5 py-4 text-sm" style="${i<P.length-1?'border-bottom:1px solid var(--line)':''}" data-reveal><div class="font-mono whitespace-nowrap" style="color:var(--accent)">[${String(i+1).padStart(2,'0')}]</div><div class="font-semibold whitespace-nowrap md:w-56" style="color:var(--accent2)">${p.k}</div>${dd?`<div style="color:var(--fg-soft)">${p.d}</div>`:''}</div>`).join('')}</div>`;
+  /* kin */ return `<div class="space-y-1">${P.map((p,i)=>`<div class="overflow-hidden whitespace-nowrap py-1" data-reveal><span class="an-marqf" style="font-family:var(--font-display);font-size:clamp(22px,4.5vw,44px);color:${i%2?'var(--accent)':'var(--fg)'}">${(p.k+(dd?'&nbsp;&nbsp;—&nbsp;&nbsp;'+p.d:'')+'&nbsp;&nbsp;✺&nbsp;&nbsp;').repeat(2)}</span></div>`).join('')}</div>`;
 }
 
 /* ============================ PROJECTS ============================ */
+/* every renderer takes (l, D) where D = depth 1..3 (glance→brief→deep).
+   D gates how much body copy each card shows. title + tech stay at all depths. */
 const PROJ = {
-1:(l)=>`<div class="max-w-3xl">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row group flex items-center justify-between py-5 cursor-pointer" style="border-bottom:1px solid var(--line)" onmouseover="this.style.paddingLeft='14px'" onmouseout="this.style.paddingLeft='0'" data-reveal>
-    <div class="flex items-center gap-5"><span class="font-mono text-sm" style="color:var(--fg-soft)">${String(i+1).padStart(2,'0')}</span><div><div class="font-medium text-lg">${p.title}</div><div class="text-sm mt-0.5" style="color:var(--fg-soft)">${p.why}</div></div></div>
-    <div class="text-xs font-mono whitespace-nowrap pl-4" style="color:var(--fg-soft)">${p.year}</div>
+1:(l,D=3)=>`<div class="max-w-3xl">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row group flex items-start justify-between py-5 cursor-pointer" style="border-bottom:1px solid var(--line)" onmouseover="this.style.paddingLeft='14px'" onmouseout="this.style.paddingLeft='0'" data-reveal>
+    <div class="flex items-start gap-5"><span class="font-mono text-sm pt-1" style="color:var(--fg-soft)">${String(i+1).padStart(2,'0')}</span><div><div class="font-medium text-lg">${p.title}</div><div class="text-xs mt-1" style="color:var(--accent)">${p.tech}</div>${D>=2?`<div class="text-sm mt-2 max-w-xl leading-relaxed" style="color:var(--fg-soft)">${D>=3?p.desc:p.why}</div>`:''}</div></div>
+    <div class="text-xs font-mono whitespace-nowrap pl-4 pt-1" style="color:var(--fg-soft)">${p.year}</div>
   </div>`).join('')}</div>`,
 
-2:(l)=>`<div class="max-w-3xl">${l.map((p,i)=>`<article onclick="go('${p.github}')" class="cursor-pointer mb-14 pb-14" style="${i<l.length-1?'border-bottom:1px solid var(--line)':''}" data-reveal>
+2:(l,D=3)=>`<div class="max-w-3xl">${l.map((p,i)=>`<article onclick="go('${p.github}')" class="cursor-pointer mb-14 pb-14" style="${i<l.length-1?'border-bottom:1px solid var(--line)':''}" data-reveal>
     <div class="flex justify-between text-[11px] tracking-[3px] uppercase mb-3"><span style="color:var(--accent)">Feature ${String(i+1).padStart(2,'0')}</span><span style="color:var(--fg-soft)">${p.status} · ${p.year}</span></div>
     <h3 style="font-family:var(--font-display);font-size:clamp(30px,5vw,52px);line-height:.96">${p.title}</h3>
-    <div class="text-xs mt-3 mb-5" style="color:var(--fg-soft)">${p.tech}</div>
-    <div class="md:columns-2 gap-9 text-[15px] leading-relaxed" style="color:var(--fg-soft)"><p style="margin:0"><em style="color:var(--fg)">"${p.why}"</em> ${p.long}</p></div>
+    <div class="text-xs mt-3 ${D>=2?'mb-5':''}" style="color:var(--fg-soft)">${p.tech}</div>
+    ${D>=2?`<div class="md:columns-2 gap-9 text-[15px] leading-relaxed" style="color:var(--fg-soft)"><p style="margin:0"><em style="color:var(--fg)">"${p.why}"</em>${D>=3?' '+p.desc:''}</p></div>`:''}
   </article>`).join('')}</div>`,
 
-3:(l)=>`<div>${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-7 md:p-9 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style="border:2px solid var(--fg);${i>0?'border-top:none':''}" onmouseover="this.style.background='var(--fg)';this.style.color='var(--bg)'" onmouseout="this.style.background='transparent';this.style.color='inherit'" data-reveal>
-    <div><div style="font-family:var(--font-display);font-size:clamp(26px,5vw,48px);line-height:.9;letter-spacing:-2px">${p.title.toUpperCase()}</div><div class="mt-4 text-xs uppercase tracking-wide">${p.tech}</div></div>
+3:(l,D=3)=>`<div>${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-7 md:p-9 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style="border:2px solid var(--fg);${i>0?'border-top:none':''}" onmouseover="this.style.background='var(--fg)';this.style.color='var(--bg)'" onmouseout="this.style.background='transparent';this.style.color='inherit'" data-reveal>
+    <div class="md:max-w-md"><div style="font-family:var(--font-display);font-size:clamp(26px,5vw,48px);line-height:.9;letter-spacing:-2px">${p.title.toUpperCase()}</div><div class="mt-4 text-xs uppercase tracking-wide">${p.tech}</div>${D>=2?`<div class="mt-4 text-sm leading-relaxed opacity-70">${D>=3?p.desc:p.why}</div>`:''}</div>
     <div class="text-right"><div class="font-bold text-lg">${p.metric}</div><div class="text-xs mt-1 uppercase">[ ${p.status} ↗ ]</div></div>
   </div>`).join('')}</div>`,
 
-4:(l)=>`<div class="space-y-1">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer overflow-hidden whitespace-nowrap py-3" style="border-top:1px solid var(--line);${i===l.length-1?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.color='var(--bg)';this.style.background='${i%2?'var(--accent2)':'var(--accent)'}'" onmouseout="this.style.color='inherit';this.style.background='transparent'">
-    <div class="an-marqf" style="font-family:var(--font-display);font-size:clamp(26px,6vw,60px);line-height:1.08">${(p.title+'&nbsp;&nbsp;—&nbsp;&nbsp;'+p.why+'&nbsp;&nbsp;✺&nbsp;&nbsp;').repeat(3)}</div>
+4:(l,D=3)=>`<div class="space-y-1">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer overflow-hidden whitespace-nowrap py-3" style="border-top:1px solid var(--line);${i===l.length-1?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.color='var(--bg)';this.style.background='${i%2?'var(--accent2)':'var(--accent)'}'" onmouseout="this.style.color='inherit';this.style.background='transparent'">
+    <div class="an-marqf" style="font-family:var(--font-display);font-size:clamp(26px,6vw,60px);line-height:1.08">${(p.title+(D>=2?'&nbsp;&nbsp;—&nbsp;&nbsp;'+(D>=3?p.desc:p.why):'')+'&nbsp;&nbsp;✺&nbsp;&nbsp;').repeat(3)}</div>
   </div>`).join('')}</div>`,
 
-5:(l)=>`<div class="space-y-7 max-w-4xl">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-9 md:p-11" style="background:var(--card);border-radius:${i%2?'3rem 3rem 3rem .5rem':'3rem 3rem .5rem 3rem'};border:1px solid var(--line)" onmouseover="this.style.transform='scale(1.015)'" onmouseout="this.style.transform='scale(1)'" data-reveal>
+5:(l,D=3)=>`<div class="space-y-7 max-w-4xl">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-9 md:p-11" style="background:var(--card);border-radius:${i%2?'3rem 3rem 3rem .5rem':'3rem 3rem .5rem 3rem'};border:1px solid var(--line)" onmouseover="this.style.transform='scale(1.015)'" onmouseout="this.style.transform='scale(1)'" data-reveal>
     <div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full" style="background:var(--accent)"></div><div style="font-family:var(--font-display);font-size:clamp(24px,4vw,38px)">${p.title}</div></div>
-    <p class="mt-4 text-lg leading-relaxed" style="color:var(--fg-soft)"><span style="color:var(--fg)">${p.why}</span> ${p.long}</p>
+    <div class="mt-2 text-xs" style="color:var(--accent)">${p.tech}</div>
+    ${D>=2?`<p class="mt-4 text-lg leading-relaxed" style="color:var(--fg-soft)"><span style="color:var(--fg)">${p.why}</span>${D>=3?' '+p.long:''}</p>`:''}
   </div>`).join('')}</div>`,
 
-6:(l)=>`<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">${l.map(p=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer relative p-6" style="border:1px solid var(--line);background:var(--card)" onmouseover="this.style.boxShadow='0 0 24px var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.boxShadow='none';this.style.borderColor='var(--line)'" data-reveal>
+6:(l,D=3)=>`<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">${l.map(p=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer relative p-6" style="border:1px solid var(--line);background:var(--card)" onmouseover="this.style.boxShadow='0 0 24px var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.boxShadow='none';this.style.borderColor='var(--line)'" data-reveal>
     <span style="position:absolute;top:-1px;left:-1px;width:10px;height:10px;border-top:2px solid var(--accent);border-left:2px solid var(--accent)"></span>
     <span style="position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;border-bottom:2px solid var(--accent);border-right:2px solid var(--accent)"></span>
     <div class="text-[10px]" style="color:var(--accent)">${p.tech}</div>
     <div class="font-bold text-lg mt-5">${p.title}</div>
-    <div class="mt-2 text-[11px] leading-snug" style="color:var(--fg-soft)">${p.why}</div>
+    ${D>=2?`<div class="mt-2 text-[12px] leading-snug" style="color:var(--fg-soft)">${D>=3?p.desc:p.why}</div>`:''}
     <div class="mt-6 text-xs flex justify-between"><span style="color:var(--fg-soft)">${p.metric}</span><span style="color:var(--accent2)">${p.score}%</span></div>
     <div class="mt-1 h-1 w-full" style="background:var(--line)"><div style="height:100%;width:${p.score}%;background:var(--accent)"></div></div>
   </div>`).join('')}</div>`,
 
-7:(l)=>`<div class="grid grid-cols-1 md:grid-cols-3 gap-px" style="background:var(--line)">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-7" style="background:var(--bg)" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='var(--bg)'" data-reveal>
+7:(l,D=3)=>`<div class="grid grid-cols-1 md:grid-cols-3 gap-px" style="background:var(--line)">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-7" style="background:var(--bg)" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='var(--bg)'" data-reveal>
     <div class="flex justify-between text-[10px] tracking-wide" style="color:var(--fg-soft)"><span>UNIT ${String(i+1).padStart(2,'0')}</span><span>${p.year}</span></div>
     <div class="font-semibold text-lg mt-7">${p.title}</div>
     <div class="mt-2 text-xs" style="color:var(--accent)">${p.tech}</div>
-    <div class="mt-4 text-[11px] leading-snug" style="color:var(--fg-soft)">${p.why}</div>
+    ${D>=2?`<div class="mt-4 text-[12px] leading-snug" style="color:var(--fg-soft)">${D>=3?p.desc:p.why}</div>`:''}
     <div class="mt-6 pt-4 text-[11px] flex justify-between" style="border-top:1px dashed var(--line);color:var(--fg-soft)"><span>LOC ${p.local} · PRV ${p.privacy}</span><span>${p.metric}</span></div>
   </div>`).join('')}</div>`,
 
-8:(l)=>{const c=["#ff3d77","#3a86ff","#ffb703","#06d6a0","#9b5de5","#ff6b35","#4cc9f0","#f15bb5","#00bbf9","#fee440"];return `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-8 rounded-[2rem]" style="background:${c[i%c.length]};color:#fff;transform:rotate(${i%2?'1.1deg':'-1.1deg'})" onmouseover="this.style.transform='rotate(0) scale(1.03)'" onmouseout="this.style.transform='rotate(${i%2?'1.1deg':'-1.1deg'})'" data-reveal>
+8:(l,D=3)=>{const c=["#ff3d77","#3a86ff","#ffb703","#06d6a0","#9b5de5","#ff6b35","#4cc9f0","#f15bb5","#00bbf9","#fee440"];return `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer p-8 rounded-[2rem]" style="background:${c[i%c.length]};color:#fff;transform:rotate(${i%2?'1.1deg':'-1.1deg'})" onmouseover="this.style.transform='rotate(0) scale(1.03)'" onmouseout="this.style.transform='rotate(${i%2?'1.1deg':'-1.1deg'})'" data-reveal>
     <div style="font-family:var(--font-display);font-size:clamp(24px,4vw,38px);line-height:.95">${p.title}</div>
-    <p class="mt-5 text-base font-semibold leading-snug">${p.why}</p>
+    ${D>=2?`<p class="mt-5 text-base font-semibold leading-snug">${p.why}</p>`:''}
+    ${D>=3?`<p class="mt-3 text-sm leading-snug" style="opacity:.92">${p.desc}</p>`:''}
     <div class="mt-6 inline-flex items-center gap-2 text-sm font-bold">${p.metric} <svg width="0.95em" height="0.95em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
   </div>`).join('')}</div>`;},
 
-9:(l)=>{const r=["I","II","III","IV","V","VI","VII","VIII","IX","X"];return `<div class="max-w-xl mx-auto">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer text-center py-9" style="${i<l.length-1?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.letterSpacing='.5px'" onmouseout="this.style.letterSpacing='normal'" data-reveal>
+9:(l,D=3)=>{const r=["I","II","III","IV","V","VI","VII","VIII","IX","X"];return `<div class="max-w-xl mx-auto">${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer text-center py-9" style="${i<l.length-1?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.letterSpacing='.5px'" onmouseout="this.style.letterSpacing='normal'" data-reveal>
     <div class="text-[11px] tracking-[4px]" style="color:var(--accent)">${r[i]} · ${p.year}</div>
     <div class="mt-3" style="font-family:var(--font-display);font-size:clamp(28px,5vw,48px)">${p.title}</div>
-    <div class="mt-3 text-sm max-w-sm mx-auto" style="color:var(--fg-soft)">${p.why}</div>
+    ${D>=2?`<div class="mt-3 text-sm max-w-md mx-auto leading-relaxed" style="color:var(--fg-soft)">${D>=3?p.desc:p.why}</div>`:''}
+    <div class="mt-3 text-[11px] tracking-[2px] uppercase" style="color:var(--accent)">${p.tech}</div>
   </div>`).join('')}</div>`;},
 
-10:(l)=>`<div style="border:1px solid var(--line)">
+10:(l,D=3)=>`<div style="border:1px solid var(--line)">
   <div class="hidden md:grid grid-cols-12 gap-3 px-4 py-2 text-[10px] font-mono uppercase tracking-wider" style="color:var(--fg-soft);border-bottom:1px solid var(--line);background:var(--card)"><div class="col-span-3">name</div><div class="col-span-3">stack</div><div class="col-span-3">result</div><div class="col-span-2">status</div><div class="col-span-1 text-right">prv</div></div>
-  ${l.map((p,i)=>`<div onclick="go('${p.github}')" class="proj-row cursor-pointer grid grid-cols-1 md:grid-cols-12 gap-1 md:gap-3 px-4 py-4 text-sm" style="${i<l.length-1?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'" data-reveal>
+  ${l.map((p,i)=>`<div onclick="go('${p.github}')" title="${p.desc}" class="proj-row cursor-pointer grid grid-cols-1 md:grid-cols-12 gap-1 md:gap-3 px-4 py-4 text-sm" style="${(i<l.length-1&&D<3)?'border-bottom:1px solid var(--line)':''}" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'" data-reveal>
     <div class="md:col-span-3 font-semibold flex items-center gap-2"><span style="color:var(--accent)">▸</span>${p.title}</div>
     <div class="md:col-span-3 font-mono text-xs" style="color:var(--accent2)">${p.tech}</div>
-    <div class="md:col-span-3 text-xs" style="color:var(--fg-soft)">${p.metric}</div>
+    <div class="md:col-span-3 text-xs" style="color:var(--fg-soft)">${D>=2?p.metric:''}</div>
     <div class="md:col-span-2 font-mono text-xs" style="color:var(--accent)">${p.status}</div>
     <div class="md:col-span-1 md:text-right font-mono text-xs" style="color:var(--accent)">${p.privacy}</div>
-  </div>`).join('')}
+  </div>${D>=3?`<div class="px-4 pb-4 text-xs leading-snug" style="color:var(--fg-soft);${i<l.length-1?'border-bottom:1px solid var(--line)':''}">${p.desc}</div>`:''}`).join('')}
 </div>`
 };
 
@@ -485,8 +604,8 @@ const PHIL = {
 2:()=>`<div class="max-w-3xl mx-auto px-8" data-reveal><div style="font-family:var(--font-display);font-size:120px;line-height:.4;color:var(--accent)">"</div><blockquote class="text-3xl md:text-4xl leading-snug" style="font-family:var(--font-display)">Privacy is not a feature you add. It is the grammar of the whole system.</blockquote><div class="mt-8 text-sm tracking-[2px] uppercase" style="color:var(--fg-soft)">— Editor's Note, on local-first</div></div>`,
 3:()=>`<div class="px-6 max-w-6xl mx-auto" data-reveal><div class="p-8" style="border:2px solid var(--fg)"><div class="text-xs uppercase tracking-[3px] mb-6">// MANIFESTO</div><div class="uppercase" style="font-family:var(--font-display);font-size:clamp(28px,6vw,72px);line-height:.92">PRIVACY IS<br>THE DEFAULT.<br><span style="color:var(--accent)">NOT THE UPSELL.</span></div></div></div>`,
 4:()=>`<div class="overflow-hidden" data-reveal><div class="kicker px-8 max-w-6xl mx-auto mb-6" style="color:var(--accent)">Mantra</div><div class="whitespace-nowrap overflow-hidden"><div class="an-marq" style="font-family:var(--font-display);font-size:clamp(34px,8vw,92px)">I DON'T WRITE CODE — I WRITE&nbsp;<span style="color:var(--accent)">INTENT</span>&nbsp;&nbsp;✺&nbsp;&nbsp;I DON'T WRITE CODE — I WRITE&nbsp;<span style="color:var(--accent2)">INTENT</span>&nbsp;&nbsp;✺&nbsp;&nbsp;</div></div></div>`,
-5:()=>`<div class="max-w-2xl mx-auto px-8" data-reveal><div class="p-12" style="background:var(--card);border-radius:3rem 3rem 3rem .5rem"><div class="text-sm tracking-[3px] mb-5 uppercase" style="color:var(--accent)">A gentle belief</div><div class="text-3xl leading-relaxed" style="font-family:var(--font-display)">I don't write code. I write intent — hand a model a complete PRD, then let the product grow while I keep it human.</div></div></div>`,
-6:()=>`<div class="max-w-3xl mx-auto px-8 font-mono" data-reveal><div class="p-7" style="border:1px solid var(--line);background:var(--card)"><div class="text-xs" style="color:var(--accent)">$ cat core_belief.txt</div><div class="mt-5 text-xl md:text-2xl leading-relaxed">> I don't write code. I write <span style="color:var(--accent2)">intent</span>.<br>> Hand the model a full PRD.<br>> Let it connect the dots.<span style="animation:blink 1s step-end infinite">_</span></div></div></div>`,
+5:()=>`<div class="max-w-2xl mx-auto px-8" data-reveal><div class="p-12" style="background:var(--card);border-radius:3rem 3rem 3rem .5rem"><div class="text-sm tracking-[3px] mb-5 uppercase" style="color:var(--accent)">A gentle belief</div><div class="text-3xl leading-relaxed" style="font-family:var(--font-display)">Good taste is gathered, not guessed. I study the finest work first, then grow something that belongs only here — never a generic clone.</div></div></div>`,
+6:()=>`<div class="max-w-3xl mx-auto px-8 font-mono" data-reveal><div class="p-7" style="border:1px solid var(--line);background:var(--card)"><div class="text-xs" style="color:var(--accent)">$ cat core_belief.txt</div><div class="mt-5 text-xl md:text-2xl leading-relaxed">> <span style="color:var(--accent2)">free tools first.</span><br>> plan cheap. ship complete.<br>> spend nothing until it earns it.<span style="animation:blink 1s step-end infinite">_</span></div></div></div>`,
 7:()=>`<div class="max-w-5xl mx-auto px-8" data-reveal><div class="p-8 blueprint" style="border:1px solid var(--line)"><div class="text-[11px] tracking-[2px] uppercase mb-6" style="color:var(--fg-soft)">SPEC NOTE — DESIGN INTENT</div><div class="text-2xl md:text-3xl leading-snug" style="font-family:var(--font-display)">The best systems improve themselves. I design so the product can learn and evolve <span style="color:var(--accent)">without a human in the loop</span>.</div></div></div>`,
 8:()=>`<div class="max-w-3xl mx-auto px-8 text-center" data-reveal><div class="inline-block px-9 py-12 rounded-[2.5rem]" style="background:var(--accent);color:#fff;transform:rotate(-1.5deg)"><div class="uppercase font-bold tracking-wide text-sm mb-4">the big idea</div><div style="font-family:var(--font-display);font-size:clamp(28px,5vw,56px);line-height:.95">SYSTEMS THAT<br>IMPROVE<br>THEMSELVES!</div></div></div>`,
 9:()=>`<div class="max-w-xl mx-auto px-8 text-center" data-reveal><div class="h-px w-12 mx-auto mb-8" style="background:var(--accent)"></div><div class="text-[11px] tracking-[5px] uppercase mb-7" style="color:var(--accent)">Doctrine</div><div class="text-2xl md:text-3xl leading-relaxed" style="font-family:var(--font-display)">The best systems improve themselves — quietly, without ever asking for the spotlight.</div><div class="h-px w-12 mx-auto mt-8" style="background:var(--accent)"></div></div>`,
@@ -494,18 +613,102 @@ const PHIL = {
 };
 
 /* ============================ ABOUT ============================ */
-function aboutHTML(n){
-  const v=VOCAB[n];
+/* per-universe ABOUT copy — same person + facts, each told in its own voice */
+const ABOUT_COPY = {
+1:{h:`I don't write code.<br>I write intent.`,p:[
+  "Full-stack engineer shipping complete AI products. I hand a model a clear brief — goals, constraints, the user's mental model — and hold the line on taste and architecture while it fills in the rest.",
+  "Local-first is my default: when privacy matters, the data never leaves the device. No silent cloud calls, no telemetry.",
+  "I move across the whole stack — Go services, Next.js frontends, on-device ML, DNS-layer networking, MCP servers and hardware bridges.",
+  "Based in Hyderabad, India, building a quiet set of local-first tools — from DNS firewalls to radiology-triage AI for hospitals.",
+  "Self-taught and self-directed — this whole range is designed, built and shipped solo, end to end."
+]},
+2:{h:`Taste gathered,<br>not guessed.`,p:[
+  "A full-stack engineer who ships finished AI products. The work starts as a brief — goals, constraints and mental models set down in full — and the model writes the lines while I keep the taste and the architecture.",
+  "Local-first is the house style: when privacy matters, nothing leaves the reader's machine. No silent calls, no telemetry.",
+  "The range runs wide — Go services, Next.js frontends, on-device ML, DNS-layer networking, MCP servers and hardware bridges.",
+  "Filed from Hyderabad, India, where a small constellation of tools is taking shape — DNS firewalls through to radiology triage.",
+  "Every interface begins as research, never a guess: the best work is studied first, then something is made that belongs only here."
+]},
+3:{h:`SHIP IT<br>COMPLETE.`,p:[
+  "FULL-STACK ENGINEER. I SHIP COMPLETE AI PRODUCTS. I WRITE THE BRIEF — GOALS, LIMITS, NON-NEGOTIABLES — AND THE MODEL DOES THE TYPING WHILE I HOLD TASTE AND ARCHITECTURE.",
+  "LOCAL-FIRST BY DEFAULT. PRIVACY MATTERS? THE DATA STAYS ON THE DEVICE. NO CLOUD. NO TELEMETRY.",
+  "WHOLE STACK — GO, NEXT.JS, ON-DEVICE ML, DNS NETWORKING, MCP SERVERS, HARDWARE BRIDGES.",
+  "BASED IN HYDERABAD, INDIA. BUILDING EVERYTHING FROM DNS FIREWALLS TO HOSPITAL TRIAGE AI.",
+  "I NEVER GUESS A BUG. I FIND WHO ALREADY HIT THE WALL, FIX IT, AND LOG IT SO IT HAPPENS ONCE."
+]},
+4:{h:`I finish<br>what I start.`,p:[
+  "Full-stack engineer who ships complete AI products fast. I hand the model a full brief and let the build run, steering taste and architecture at speed instead of typing every line.",
+  "Local-first is the spine under every frame — when privacy matters, the data stays put. No silent calls, no telemetry.",
+  "Moving across the whole stack — Go, Next.js, on-device ML, DNS networking, MCP servers and hardware bridges.",
+  "Out of Hyderabad, India, building local-first tools in motion — DNS firewalls, on-device vision, radiology triage.",
+  "Free tools and fast models carry the early momentum — I spend nothing until the work has earned it."
+]},
+5:{h:`Grown for<br>India first.`,p:[
+  "Full-stack engineer who ships complete AI products. I plant a full brief — goals, constraints, the people who'll use it — and tend the shape while the model grows the rest.",
+  "Local-first is how I keep things safe: when it's tender, the data never leaves the device. No silent calls, no telemetry.",
+  "I tend the whole stack — Go services, Next.js frontends, on-device ML, DNS networking, MCP servers and hardware bridges.",
+  "Rooted in Hyderabad, India, growing a patient set of tools — from DNS firewalls to radiology triage for hospitals.",
+  "Grown for the place I live — hospitals, classrooms and homes in India, never a borrowed foreign demo."
+]},
+6:{h:`// i don't write code<br>// i write intent`,p:[
+  "full-stack engineer shipping complete AI products. input is a full PRD — goals, constraints, mental models — and the model connects the dots while i guard taste + architecture.",
+  "local_first = default. when privacy matters, data never leaves the device; uplink 0 kb/s. no telemetry.",
+  "whole stack online — Go, Next.js, on-device ML, DNS networking, MCP servers, hardware bridges.",
+  "running out of Hyderabad, India — building DNS firewalls, on-device vision, radiology triage.",
+  "// i never guess a bug — find who already hit the wall, fix once, log it so it never returns."
+]},
+7:{h:`Privacy, specified —<br>not bolted on.`,p:[
+  "Full-stack engineer delivering complete AI products. Requirements are written as a full brief — goals, constraints, mental models — and implementation is delegated while taste and architecture stay with me.",
+  "Local-first is a specified boundary: where privacy matters, data does not leave the device. No silent calls, no telemetry.",
+  "Coverage spans the full stack — Go, Next.js, on-device ML, DNS networking, MCP servers and hardware bridges.",
+  "Operating from Hyderabad, India, across a set of local-first tools — DNS firewalls to radiology triage.",
+  "Frugal by spec: free tools and lean models carry the design phase; nothing is spent until the work earns it."
+]},
+8:{h:`i ship the<br>whole thing!`,p:[
+  "full-stack engineer who ships complete, real AI products. i hand the ai a full brief — goals, limits, the whole vibe — and let it run while i keep the taste and the architecture in check.",
+  "local-first is my whole thing: when privacy matters, your data just stays on your machine. no sneaky cloud calls!",
+  "i build right across the stack — Go, Next.js, on-device ML, DNS networking, MCP servers, hardware bits.",
+  "based in hyderabad, india, building everything from DNS firewalls to hospital triage AI.",
+  "endlessly curious — i keep a memory on every project, so i only ever make a mistake once!"
+]},
+9:{h:`A small,<br>deliberate body<br>of work.`,p:[
+  "A full-stack engineer who ships complete AI products. The work is composed as a brief — goals, constraints, mental models — and the model executes while taste and architecture remain mine.",
+  "Local-first is a quiet default: when privacy matters, nothing leaves the device. No silent calls, no telemetry.",
+  "The practice spans the whole stack — Go, Next.js, on-device ML, DNS networking, MCP servers and hardware bridges.",
+  "Based in Hyderabad, India, tending a small, deliberate body of work — DNS firewalls to radiology triage.",
+  "Built by hand and self-taught — each piece finished with care, considered, and none of it outsourced."
+]},
+10:{h:`free_tools_first<br>= true`,p:[
+  "full-stack engineer · ships complete AI products. input: full PRD (goals, constraints, mental models) → model connects the dots → i hold taste + architecture.",
+  "local_first=default — when privacy matters, data stays on-device, cloud_calls=0, telemetry=off.",
+  "stack: Go · Next.js · on-device ML · DNS networking · MCP servers · hardware bridges.",
+  "base: Hyderabad, India. shipping DNS firewalls, on-device vision, radiology triage.",
+  "solo full-stack range — web · ml · networking · hardware. one person, the whole pipeline."
+]}
+};
+function aboutHTML(n,D=3){
+  const v=VOCAB[n], a=ABOUT_COPY[n]||ABOUT_COPY[1];
+  /* DEPTH escalates the About section hard:
+     D1 GLANCE = headline + one lead line.
+     D2 BRIEF  = + the rest of the paragraphs.
+     D3 DEEP   = + the stat band + the full toolbelt. */
   return `<div class="max-w-5xl mx-auto px-8 py-16" style="border-top:1px solid var(--line)">
     <div data-reveal>
-      <div class="kicker mb-3">CHAPTER 01 — ${v.who}</div>
-      <div class="text-5xl md:text-6xl leading-none font-semibold tracking-[-2px]" style="font-family:var(--font-display)">I don't write code.<br>I write intent.</div>
+      <div class="kicker mb-3">CHAPTER 01 — ${v.who} <span class="opacity-50">· ${DEPTH_NAME[D]}</span></div>
+      <div class="text-5xl md:text-6xl leading-none font-semibold tracking-[-2px]" style="font-family:var(--font-display)">${a.h}</div>
     </div>
     <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 text-lg leading-relaxed max-w-4xl" style="color:var(--fg-soft)" data-reveal>
-      <div>Full-stack engineer who ships complete, production AI products. I hand a model a complete PRD — goals, constraints, user mental models, non-negotiables — then let it connect the dots while I hold the line on taste and architecture.</div>
-      <div><strong style="color:var(--fg)">Local-first is my default.</strong> When privacy matters, the user's data never leaves their device. No silent cloud calls, no telemetry, no surprises.</div>
-      <div>I move fast across the whole stack — Go services, Next.js frontends, on-device ML, DNS-layer networking, MCP servers and hardware bridges. Whatever the product needs, I build it end-to-end.</div>
-      <div>Based in <strong style="color:var(--fg)">Hyderabad, India.</strong> Right now I'm building a constellation of local-first tools — from DNS firewalls to radiology-triage AI for Indian hospitals.</div>
+      <div>${a.p[0]}</div>
+      ${D>=2?`<div><strong style="color:var(--fg)">${a.p[1]}</strong></div>
+      <div>${a.p[2]}</div>
+      <div>${a.p[3]}</div>
+      <div style="color:var(--fg)">${a.p[4]}</div>`:''}
+    </div>
+    ${D>=3?`<div class="mt-12" data-reveal>
+      <div class="kicker mb-4">WHAT SETS ME APART</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3">
+        ${["Self-taught, full-stack — design, build and ship carried solo","Ships complete — the boring last 20% is in scope","Free tools first — plan cheap, spend only once it's earned","Research-driven taste — I study the best work before I design","Builds for India first — hospitals, classrooms, homes","Privacy by conviction — local-first, zero cloud calls by default","Never guess a bug — research the fix, then log it once"].map(t=>`<div class="flex items-start gap-3 text-base leading-snug"><span class="mt-1.5 inline-block w-2 h-2 rounded-full" style="background:var(--accent);flex:0 0 auto"></span><span style="color:var(--fg-soft)">${t}</span></div>`).join('')}
+      </div>
     </div>
     <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px" style="background:var(--line)" data-reveal>
       ${[["10+","PRODUCTS SHIPPED"],["35","GITHUB REPOS"],["0","CLOUD CALLS BY DEFAULT"],["100%","ON-DEVICE WHEN IT COUNTS"]].map(s=>`<div class="p-6" style="background:var(--bg)"><div style="font-family:var(--font-display);font-size:34px;color:var(--accent)">${s[0]}</div><div class="text-[11px] mt-2 tracking-wide uppercase" style="color:var(--fg-soft)">${s[1]}</div></div>`).join('')}
@@ -515,17 +718,58 @@ function aboutHTML(n){
       <div class="flex flex-wrap gap-3">
         ${["Next.js 15","Go","TypeScript","Python","Model Context Protocol","On-device ML","DNS / Networking","Local-first","Convex","ESP32 / Hardware","AI Product Engineering"].map(t=>`<div class="px-5 py-2 rounded-2xl text-sm" style="background:var(--card);border:1px solid var(--line)">${t}</div>`).join('')}
       </div>
-    </div>
+    </div>`:''}
   </div>`;
 }
 
 /* ============================ ENGINE ============================ */
-let currentX=35, currentY=25, lastApplied=0;
-function getMode(x,y){const avg=Math.floor((x+y)/2);return Math.min(Math.max(Math.ceil(avg/10),1),10);}
-function go(url){window.open(url,'_blank');}
-function scoredList(){
-  return projects.map(p=>({...p,score:Math.max(25,Math.floor(100-(Math.abs(p.local-currentX)+Math.abs(p.privacy-currentY))/2))})).sort((a,b)=>b.score-a.score);
+let currentX=0, currentY=3, lastApplied=0; /* X = world index 0..9, Y = depth 1..3 — BOTH snap, so every notch changes the view (no dead travel) */
+/* TWO INDEPENDENT AXES — they do genuinely different things:
+   X = WORLD. The ten universes sit along a line in aesthetic order; each X
+       stop snaps to one. Step X and the whole site re-skins.
+   Y = DEPTH. NOT a theme control — three snapping stops (glance/brief/deep)
+       that set how much of the page exists, from names-only to the full story. */
+const THEME_ORDER=[1,9,2,5,7,10,6,8,3,4];
+const THPOS={}; THEME_ORDER.forEach((u,i)=>{THPOS[u]=6+i/(THEME_ORDER.length-1)*88;});
+function getMode(xi){return THEME_ORDER[Math.max(0,Math.min(9,xi|0))];}
+function getDepth(yi){return Math.max(1,Math.min(3,yi|0));}
+const DEPTH_NAME={1:"GLANCE",2:"BRIEF",3:"DEEP DIVE"};
+const DEPTH_TOP={1:84,2:50,3:16}; /* marker vertical position per depth band */
+function buildDnaMap(){
+  const map=document.getElementById('dna-map'); if(!map||map.dataset.built) return;
+  /* horizontal depth bands (bottom=glance, top=deep) */
+  [["DEEP",0,33],["BRIEF",33.3,33],["GLANCE",66.6,34]].forEach((b,i)=>{
+    const band=document.createElement('div');
+    band.style.cssText=`position:absolute;left:0;right:0;top:${b[1]}%;height:${b[2]}%;${i%2?'background:color-mix(in srgb,var(--fg-soft) 6%,transparent)':''}`;
+    const lab=document.createElement('span');
+    lab.textContent=b[0];
+    lab.style.cssText='position:absolute;left:6px;top:4px;font-size:8px;letter-spacing:2px;color:var(--fg-soft);opacity:.7';
+    band.appendChild(lab); map.appendChild(band);
+  });
+  /* theme dots along the mid-line */
+  for(const u of THEME_ORDER){
+    const d=document.createElement('div'); d.className='dna-dot'; d.dataset.uni=u; d.title=UNAME[u];
+    d.style.cssText=`position:absolute;left:${THPOS[u]}%;top:50%;width:9px;height:9px;border-radius:50%;background:var(--line);border:1px solid var(--fg-soft);transform:translate(-50%,-50%);transition:all .25s;z-index:1`;
+    map.appendChild(d);
+  }
+  const m=document.createElement('div'); m.id='dna-marker';
+  m.style.cssText='position:absolute;width:16px;height:16px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 30%,transparent);transform:translate(-50%,-50%);transition:left .18s ease,top .18s ease;pointer-events:none;z-index:3';
+  map.appendChild(m);
+  map.dataset.built='1';
 }
+function updateDnaMap(n,D){
+  buildDnaMap();
+  const m=document.getElementById('dna-marker');
+  if(m){m.style.left=THPOS[n]+'%';m.style.top=DEPTH_TOP[D]+'%';}
+  document.querySelectorAll('.dna-dot').forEach(d=>{const on=+d.dataset.uni===n;
+    d.style.background=on?'var(--accent)':'var(--line)';
+    d.style.borderColor=on?'var(--accent)':'var(--fg-soft)';
+    d.style.transform=`translate(-50%,-50%) scale(${on?1.8:1})`;
+  });
+}
+function go(url){window.open(url,'_blank');}
+/* projects keep a stable order now; score (for the neon bar) = privacy */
+function scoredList(){ return projects.map(p=>({...p,score:p.privacy})); }
 function applyTheme(n){
   const t=THEMES[n], r=document.documentElement.style;
   r.setProperty('--bg',t.bg); r.setProperty('--fg',t.fg); r.setProperty('--fg-soft',t.soft);
@@ -555,11 +799,12 @@ const STORY=[
   {u:9,html:()=>`<div class="max-w-2xl mx-auto w-full text-center">${PHIL[9]()}<div class="mt-12" data-reveal><a href="https://github.com/RLalithSeeker" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 rounded-full text-lg" style="border:1px solid var(--accent);color:var(--accent)"><svg width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg> Let's build something quiet</a><div class="mt-8 text-sm" style="color:var(--fg-soft)">Lalith R. · Hyderabad, India · 2026</div></div></div>`}
 ];
 function pick(ids){return ids.map(id=>{const p=projects.find(x=>x.id===id);return {...p,score:p.privacy};});}
-function aboutInner(n){const v=VOCAB[n];
-  return `<div data-reveal><div class="kicker mb-3">${v.who}</div><div class="text-4xl md:text-6xl leading-none font-semibold" style="font-family:var(--font-display)">I don't write code.<br>I write intent.</div></div>
+function aboutInner(n){const v=VOCAB[n], a=ABOUT_COPY[n]||ABOUT_COPY[1];
+  return `<div data-reveal><div class="kicker mb-3">${v.who}</div><div class="text-4xl md:text-6xl leading-none font-semibold" style="font-family:var(--font-display)">${a.h}</div></div>
   <div class="mt-10 md:columns-2 gap-12 text-lg leading-relaxed" style="color:var(--fg-soft)" data-reveal>
-    <p>Full-stack engineer who ships complete, production AI products from Hyderabad, India. I hand a model a complete PRD — goals, constraints, mental models, non-negotiables — then let it connect the dots while I hold the line on taste and architecture.</p>
-    <p class="mt-4"><strong style="color:var(--fg)">Local-first is the default.</strong> When privacy matters, the data never leaves the device — no silent cloud calls, no telemetry. I move across the whole stack: Go, Next.js, on-device ML, DNS networking, MCP servers, hardware bridges.</p>
+    <p>${a.p[0]}</p>
+    <p class="mt-4"><strong style="color:var(--fg)">${a.p[1]}</strong> ${a.p[2]}</p>
+    <p class="mt-4" style="color:var(--fg)">${a.p[4]}</p>
   </div>
   <div class="mt-10 flex flex-wrap gap-6 text-sm" style="color:var(--fg-soft)" data-reveal><span><strong style="color:var(--accent)">10+</strong> products shipped</span><span><strong style="color:var(--accent)">35</strong> repos</span><span><strong style="color:var(--accent)">0</strong> cloud calls by default</span><span><strong style="color:var(--accent)">100%</strong> on-device when it counts</span></div>`;
 }
@@ -622,36 +867,43 @@ function startManualMode(){
   const xs=document.getElementById('manual-x-slider'), ys=document.getElementById('manual-y-slider');
   xs.value=currentX; ys.value=currentY;
   const upd=()=>{ currentX=+xs.value; currentY=+ys.value;
-    document.getElementById('manual-x-val').textContent=currentX;
-    document.getElementById('manual-y-val').textContent=currentY;
+    const n=getMode(currentX), D=getDepth(currentY);
+    document.getElementById('manual-x-val').textContent=UNAME[n].split(' · ')[0];
+    document.getElementById('manual-y-val').textContent=DEPTH_NAME[D];
     renderManual();
   };
   xs.addEventListener('input',upd); ys.addEventListener('input',upd);
   document.getElementById('manual-year').textContent=new Date().getFullYear();
   upd();
 }
-let lastManualMode=0;
+let lastManualKey='';
 function sectionHead(kicker,title,sub){
   return `<div class="mb-10" data-reveal><div class="kicker mb-2" style="color:var(--accent)">${kicker}</div><div class="text-3xl md:text-5xl font-semibold tracking-tight" style="font-family:var(--font-display)">${title}</div>${sub?`<div class="mt-2 text-sm" style="color:var(--fg-soft)">${sub}</div>`:''}</div>`;
 }
 function renderManual(){
-  const n=getMode(currentX,currentY), v=VOCAB[n];
-  const projEl=document.getElementById('manual-projects');
-  if(n!==lastManualMode){
-    applyTheme(n);
-    document.getElementById('manual-mode-badge').textContent=UNAME[n];
-    document.getElementById('manual-universe-name').innerHTML=UNAME[n]+' &nbsp;·&nbsp; '+VIBE[n].toUpperCase();
-    document.getElementById('manual-hero').innerHTML=HERO[n]();
-    document.getElementById('manual-about').innerHTML=aboutHTML(n);
-    document.getElementById('manual-work').innerHTML=sectionHead('CHAPTER 02 — '+v.work,'The way I build.',v.workSub)+renderWork(n);
-    projEl.innerHTML=sectionHead('CHAPTER 03 — '+v.proj,'Ten products. All local-first.','Click any to open the repo')+PROJ[n](scoredList());
-    document.getElementById('manual-philosophy').innerHTML=PHIL[n]();
-    setupReveals(document.getElementById('manual-mode'));
-    lastManualMode=n;
+  const n=getMode(currentX), v=VOCAB[n], D=getDepth(currentY);
+  updateDnaMap(n,D);
+  const key=n+'-'+D;
+  if(key===lastManualKey) return; /* nothing material changed — skip re-render (no thrash while dragging) */
+  applyTheme(n); /* guards its own wipe by theme */
+  const workEl=document.getElementById('manual-work'), philEl=document.getElementById('manual-philosophy'), projEl=document.getElementById('manual-projects');
+  document.getElementById('manual-mode-badge').textContent=UNAME[n]+' · '+DEPTH_NAME[D];
+  document.getElementById('manual-universe-name').innerHTML=UNAME[n]+' &nbsp;·&nbsp; '+VIBE[n].toUpperCase()+' &nbsp;·&nbsp; '+DEPTH_NAME[D];
+  document.getElementById('manual-hero').innerHTML=HERO[n]();
+  document.getElementById('manual-about').innerHTML=aboutHTML(n,D);
+  /* DEPTH controls how much of the PAGE exists: GLANCE hides Approach + Philosophy entirely */
+  if(D>=2){
+    workEl.style.display=''; philEl.style.display='';
+    workEl.innerHTML=sectionHead('CHAPTER 02 — '+v.work,'The way I build.',D>=3?v.workSub:'Eight rules — titles only. Slide Y up for the reasoning.')+renderWork(n,D);
+    philEl.innerHTML=PHIL[n]();
   } else {
-    projEl.innerHTML=sectionHead('CHAPTER 03 — '+v.proj,'Ten products. All local-first.','Click any to open the repo')+PROJ[n](scoredList());
-    projEl.querySelectorAll('[data-reveal]').forEach(el=>el.classList.add('in'));
+    workEl.style.display='none'; philEl.style.display='none';
+    workEl.innerHTML=''; philEl.innerHTML='';
   }
+  const sub={1:'Glance — just the names. Slide Y up to reveal more.',2:'One line on each. Slide Y to the top for the full story.',3:'The full write-up on every project.'}[D];
+  projEl.innerHTML=sectionHead('CHAPTER '+(D>=2?'03':'02')+' — '+v.proj,'Ten products. All local-first.','Depth · '+DEPTH_NAME[D]+' — '+sub)+PROJ[n](scoredList(),D);
+  setupReveals(document.getElementById('manual-mode'));
+  lastManualKey=key;
 }
 
 /* landing: petals + mouse spotlight + rotating word + count-up */
