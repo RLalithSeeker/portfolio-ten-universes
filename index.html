@@ -77,7 +77,7 @@ a{color:inherit;text-decoration:none}
 #wipe{position:fixed;inset:0;z-index:80;background:var(--accent);transform:scaleX(0);pointer-events:none}
 #wipe.go{animation:wipe .7s cubic-bezier(.7,0,.3,1)}
 
-input[type=range]{accent-color:var(--accent)}
+input[type=range]{accent-color:var(--accent);height:44px;cursor:pointer}
 ::selection{background:var(--accent);color:var(--bg)}
 .kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg-soft)}
 
@@ -175,8 +175,8 @@ input[type=range]{accent-color:var(--accent)}
   <div class="fixed top-0 left-0 right-0 z-50 px-8 py-4 flex justify-between items-center text-xs tracking-widest" style="background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
     <div id="auto-label">CHAPTER 01</div>
     <div class="flex items-center gap-5">
-      <button id="auto-toggle" onclick="toggleAutoScroll()" class="hover:opacity-60 transition-opacity px-2 py-2"><svg width="0.85em" height="0.85em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg> AUTO</button>
-      <button onclick="exitAutoMode()" class="hover:opacity-60 transition-opacity px-2 py-2">EXIT</button>
+      <button id="auto-toggle" onclick="toggleAutoScroll()" class="hover:opacity-60 transition-opacity px-3 inline-flex items-center gap-1" style="min-height:44px"><svg width="0.85em" height="0.85em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg> AUTO</button>
+      <button onclick="exitAutoMode()" class="hover:opacity-60 transition-opacity px-3 inline-flex items-center" style="min-height:44px">EXIT</button>
     </div>
   </div>
   <div id="auto-progress" class="fixed right-5 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-2"></div>
@@ -189,9 +189,9 @@ input[type=range]{accent-color:var(--accent)}
     <div class="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
       <div class="font-semibold tracking-tight font-display">LALITH R.</div>
       <div class="flex items-center gap-4 sm:gap-7 text-sm">
-        <a href="#manual-work" class="hover:opacity-60 hidden sm:block py-2">Approach</a>
-        <a href="#manual-projects" class="hover:opacity-60 py-2">Work</a>
-        <a href="https://github.com/RLalithSeeker" target="_blank" class="hover:opacity-60 py-2">GitHub</a>
+        <a href="#manual-work" class="hover:opacity-60 hidden sm:flex items-center py-3 px-1" style="min-height:44px">Approach</a>
+        <a href="#manual-projects" class="hover:opacity-60 flex items-center py-3 px-1" style="min-height:44px">Work</a>
+        <a href="https://github.com/RLalithSeeker" target="_blank" class="hover:opacity-60 flex items-center py-3 px-1" style="min-height:44px">GitHub</a>
         <span id="manual-mode-badge" class="hidden sm:inline-block px-3 py-1 text-[10px] tracking-[2px] rounded-full font-mono" style="border:1px solid var(--line);background:var(--card)"></span>
       </div>
     </div>
